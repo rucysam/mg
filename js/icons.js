@@ -76,6 +76,19 @@
         '<path d="M32 6 L54 14 V30 C54 44 44 54 32 58 C20 54 10 44 10 30 V14 Z" stroke="currentColor" stroke-width="3" fill="none"/>' +
         '<path d="M22 32 L29 39 L43 23" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
       );
+    },
+    speakerOn: function () {
+      return svg(
+        '<path d="M10 24 H20 L34 12 V52 L20 40 H10 Z" fill="currentColor"/>' +
+        '<path d="M42 20 C48 26 48 38 42 44" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/>' +
+        '<path d="M48 12 C58 22 58 42 48 52" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.6"/>'
+      );
+    },
+    speakerOff: function () {
+      return svg(
+        '<path d="M10 24 H20 L34 12 V52 L20 40 H10 Z" fill="currentColor"/>' +
+        '<path d="M44 22 L58 36 M58 22 L44 36" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/>'
+      );
     }
   };
 })();

@@ -27,6 +27,7 @@
     },
     btnStart: document.getElementById('btn-start'),
     btnRetry: document.getElementById('btn-retry'),
+    btnMute: document.getElementById('btn-mute'),
     diffButtons: Array.prototype.slice.call(document.querySelectorAll('.diff-btn')),
     progressTrack: document.getElementById('progress-track'),
     livesTrack: document.getElementById('lives-track'),
@@ -54,6 +55,19 @@
   };
 
   var toastTimer = null;
+
+  // 모든 단계의 버튼 클릭에 공통으로 짧은 탭 사운드를 줍니다.
+  // stageArea의 내용은 매 단계마다 바뀌지만, 이 리스너는 stageArea 자체에 한 번만 등록되므로
+  // 각 단계 파일을 건드리지 않고도 모든 단계에 자동으로 적용됩니다.
+  els.stageArea.addEventListener(
+    'click',
+    function (e) {
+      if (e.target.closest('button')) {
+        window.GameSound.play('tap');
+      }
+    },
+    true
+  );
 
   function showScreen(name) {
     Object.keys(els.screens).forEach(function (key) {
@@ -130,6 +144,7 @@
     renderProgress();
     renderLives();
     renderCombo();
+    window.GameSound.play('stageStart');
 
     var locked = false; // 이 스테이지 인스턴스 동안 succeed/fail이 한 번만 처리되도록 보호
     var timerInterval = null;
@@ -151,6 +166,7 @@
       setTimeLimit: function (seconds) {
         stopTimer();
         var deadline = Date.now() + seconds * 1000;
+        var lastShown = null;
 
         function tick() {
           if (locked) {
@@ -164,7 +180,11 @@
             ctx.fail('시간이 초과되었습니다.');
             return;
           }
-          els.stageTimer.textContent = remaining + '초';
+          if (remaining !== lastShown) {
+            lastShown = remaining;
+            els.stageTimer.textContent = remaining + '초';
+            if (remaining <= 3) window.GameSound.play('tick');
+          }
         }
 
         tick();
@@ -198,6 +218,12 @@
     var message = comboBonus > 0 ? '통과! +' + gained + ' (콤보 +' + comboBonus + ')' : '통과! +' + gained;
     showToast(message, 'success');
     renderCombo();
+    window.GameSound.play('success');
+    if (comboBonus > 0) {
+      setTimeout(function () {
+        window.GameSound.play('comboUp');
+      }, 90);
+    }
 
     setTimeout(function () {
       loadStage(state.stageIndex + 1);
@@ -211,6 +237,7 @@
     renderCombo();
     els.stageArea.classList.add('is-locked');
     showToast(message || '다시 확인해주세요.', 'danger');
+    window.GameSound.play('fail');
 
     setTimeout(function () {
       if (state.lives <= 0) {
@@ -241,6 +268,7 @@
       els.resultScore.textContent = '점수: ' + state.score + ' / ' + maxScore + '점';
       els.resultDetail.textContent =
         '난이도: ' + diffPreset.label + ' · 남은 목숨: ' + state.lives + ' / ' + TOTAL_LIVES;
+      window.GameSound.play('gameClear');
     } else {
       els.resultEyebrow.textContent = 'VERIFICATION FAILED';
       els.resultHeadline.textContent = '인증 실패';
@@ -249,10 +277,16 @@
       els.resultScore.textContent = '획득 점수: ' + state.score + '점';
       els.resultDetail.textContent =
         '난이도: ' + diffPreset.label + ' · 아쉽게도 사람임을 증명하지 못했습니다. 다시 시도해보세요.';
+      window.GameSound.play('gameOver');
     }
   }
 
   function startGame() {
+    window.GameSound.unlock();
+    window.GameSound.play('gameStart');
+    setTimeout(function () {
+      window.GameSound.startMusic();
+    }, 350);
     state.stageIndex = 0;
     state.lives = TOTAL_LIVES;
     state.score = 0;
@@ -268,8 +302,24 @@
       });
       btn.classList.add('selected');
       state.difficultyKey = btn.dataset.diff;
+      window.GameSound.unlock();
+      window.GameSound.play('tap');
     });
   });
+
+  function renderMuteButton() {
+    var muted = window.GameSound.isMuted();
+    els.btnMute.innerHTML = muted ? window.GameIcons.speakerOff() : window.GameIcons.speakerOn();
+    els.btnMute.classList.toggle('is-muted', muted);
+  }
+
+  els.btnMute.addEventListener('click', function () {
+    window.GameSound.unlock();
+    var nowMuted = window.GameSound.toggleMuted();
+    renderMuteButton();
+    if (!nowMuted) window.GameSound.play('tap');
+  });
+  renderMuteButton();
 
   els.btnStart.addEventListener('click', startGame);
   els.btnRetry.addEventListener('click', startGame);
