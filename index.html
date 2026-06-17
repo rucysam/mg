@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>AI가 아닙니다</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- 타이틀 화면 -->
+    <section id="screen-title" class="screen active">
+      <div class="title-card">
+        <div class="brand-mark" id="brand-mark"></div>
+        <h1 class="game-title">AI가 아닙니다</h1>
+        <p class="game-subtitle">당신이 사람이라는 걸 증명하세요.<br />7단계 보안 인증을 모두 통과해야 합니다.</p>
+        <ul class="rules-list">
+          <li>목숨은 <strong>3개</strong>입니다. 모두 잃으면 인증에 실패합니다.</li>
+          <li>각 단계를 통과할 때마다 점수를 획득합니다.</li>
+          <li>실패한 단계는 다른 문제로 다시 출제됩니다.</li>
+        </ul>
+        <button id="btn-start" type="button" class="btn btn-primary">인증 시작하기</button>
+      </div>
+      <p class="footer-note">본 시스템은 가상의 보안 절차이며 실제 인증과 무관합니다.</p>
+    </section>
+
+    <!-- 게임 화면 -->
+    <section id="screen-game" class="screen">
+      <header class="game-header">
+        <div class="progress-track" id="progress-track"></div>
+        <div class="lives-track" id="lives-track"></div>
+      </header>
+
+      <div class="stage-wrap">
+        <div class="stage-card">
+          <p class="stage-label" id="stage-label">STEP 1 / 7</p>
+          <h2 class="stage-title" id="stage-title"></h2>
+          <p class="stage-instruction" id="stage-instruction"></p>
+          <div class="stage-area" id="stage-area"></div>
+        </div>
+        <p class="widget-disclaimer">이 화면은 보안 검증 시스템에 의해 보호됩니다.</p>
+      </div>
+
+      <div class="toast" id="toast"></div>
+    </section>
+
+    <!-- 결과 화면 -->
+    <section id="screen-result" class="screen">
+      <div class="result-card">
+        <p class="result-eyebrow" id="result-eyebrow">RESULT</p>
+        <h2 class="result-headline" id="result-headline"></h2>
+        <div class="rank-badge" id="rank-badge"></div>
+        <p class="result-score" id="result-score"></p>
+        <p class="result-detail" id="result-detail"></p>
+        <button id="btn-retry" type="button" class="btn btn-primary">다시 도전하기</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- 아이콘 모듈 -->
+  <script src="js/icons.js"></script>
+
+  <!-- 스테이지 레지스트리 초기화 (반드시 스테이지 파일들보다 먼저 로드) -->
+  <script src="js/stages-init.js"></script>
+
+  <!-- 스테이지 모듈들 (이 순서대로 게임에 등장합니다) -->
+  <script src="js/stages/stage1-signs.js"></script>
+  <script src="js/stages/stage2-checkbox.js"></script>
+  <script src="js/stages/stage3-text.js"></script>
+  <script src="js/stages/stage4-rotate.js"></script>
+  <script src="js/stages/stage5-numbers.js"></script>
+  <script src="js/stages/stage6-slide.js"></script>
+  <script src="js/stages/stage7-rhythm.js"></script>
+
+  <!-- 메인 게임 컨트롤러 (반드시 마지막에 로드) -->
+  <script src="js/main.js"></script>
+</body>
+</html>
