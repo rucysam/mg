@@ -4,9 +4,18 @@
    - currentColor를 사용하므로 부모 요소의 color 값으로 색이 바뀝니다.
    ========================================================= */
 (function () {
+  // viewBox와 일치하는 명시적 width/height 속성을 SVG 루트에 반드시 넣어줍니다.
+  // 이게 없으면 일부 브라우저(특히 WebKit 계열)는 SVG의 "고유 크기(intrinsic size)"를
+  // 기본값인 300x150으로 취급해서, CSS Grid/Flex의 최소 크기 계산에 그 값을 그대로 써버립니다.
+  // 그러면 화면에는 width:100%로 작게 그려지더라도 그리드 트랙 자체는 300px 이상으로
+  // 넓어져서 모바일 화면 폭을 넘기는 가로 스크롤/잘림 버그가 생깁니다.
   function svg(inner, viewBox) {
+    var vb = viewBox || '0 0 64 64';
+    var parts = vb.split(' ');
+    var w = parts[2] || '64';
+    var h = parts[3] || '64';
     return (
-      '<svg viewBox="' + (viewBox || '0 0 64 64') +
+      '<svg viewBox="' + vb + '" width="' + w + '" height="' + h +
       '" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
       inner +
       '</svg>'
@@ -88,6 +97,14 @@
       return svg(
         '<path d="M10 24 H20 L34 12 V52 L20 40 H10 Z" fill="currentColor"/>' +
         '<path d="M44 22 L58 36 M58 22 L44 36" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/>'
+      );
+    },
+    helpCircle: function () {
+      return svg(
+        '<circle cx="32" cy="32" r="25" fill="none" stroke="currentColor" stroke-width="3.5"/>' +
+        '<path d="M24 25c0-5 4-9 9-9 5 0 8 3.5 8 8 0 4-3 6-5.5 8-2 1.8-2.5 3-2.5 5.5" ' +
+        'stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<circle cx="33" cy="46" r="2.8" fill="currentColor"/>'
       );
     }
   };

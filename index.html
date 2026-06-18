@@ -7,9 +7,9 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <button id="btn-mute" type="button" class="mute-btn" aria-label="소리 켜기/끄기"></button>
-
   <div id="app">
+    <button id="btn-mute" type="button" class="mute-btn" aria-label="소리 켜기/끄기"></button>
+
 
     <!-- 타이틀 화면 -->
     <section id="screen-title" class="screen active">
@@ -22,6 +22,14 @@
           <li>각 단계마다 제한시간이 있고, 연속으로 통과하면 콤보 보너스가 쌓입니다.</li>
           <li>실패한 단계는 다른 문제로 다시 출제됩니다.</li>
         </ul>
+        <button type="button" id="btn-howto" class="howto-entry-card">
+          <span class="howto-entry-card__icon" id="howto-entry-icon"></span>
+          <span class="howto-entry-card__text">
+            <strong>게임 방법</strong>
+            <small>12개 미니게임을 미리 보고 플레이 방법을 확인하세요</small>
+          </span>
+          <span class="howto-entry-card__arrow">›</span>
+        </button>
         <div class="difficulty-select" id="difficulty-select">
           <button type="button" class="diff-btn" data-diff="easy">쉬움</button>
           <button type="button" class="diff-btn selected" data-diff="normal">보통</button>
@@ -70,6 +78,17 @@
       </div>
     </section>
 
+    <!-- 게임 방법 화면 -->
+    <section id="screen-howto" class="screen">
+      <header class="howto-header">
+        <button type="button" id="btn-howto-back" class="howto-back-btn" aria-label="뒤로가기">
+          <span id="howto-back-icon"></span>
+        </button>
+        <h2 class="howto-title">게임 방법</h2>
+      </header>
+      <div class="howto-list" id="howto-list"></div>
+    </section>
+
   </div>
 
   <!-- 아이콘 모듈 -->
@@ -77,6 +96,9 @@
 
   <!-- 사운드 이펙트 모듈 (전자음 합성, 외부 음원 파일 없음) -->
   <script src="js/sound.js"></script>
+
+  <!-- 게임 방법 화면용 데이터 (미리보기 + 설명) -->
+  <script src="js/howto.js"></script>
 
   <!-- 스테이지 레지스트리 초기화 (반드시 스테이지 파일들보다 먼저 로드) -->
   <script src="js/stages-init.js"></script>

@@ -23,11 +23,17 @@
     screens: {
       title: document.getElementById('screen-title'),
       game: document.getElementById('screen-game'),
-      result: document.getElementById('screen-result')
+      result: document.getElementById('screen-result'),
+      howto: document.getElementById('screen-howto')
     },
     btnStart: document.getElementById('btn-start'),
     btnRetry: document.getElementById('btn-retry'),
     btnMute: document.getElementById('btn-mute'),
+    btnHowto: document.getElementById('btn-howto'),
+    btnHowtoBack: document.getElementById('btn-howto-back'),
+    howtoEntryIcon: document.getElementById('howto-entry-icon'),
+    howtoBackIcon: document.getElementById('howto-back-icon'),
+    howtoList: document.getElementById('howto-list'),
     diffButtons: Array.prototype.slice.call(document.querySelectorAll('.diff-btn')),
     progressTrack: document.getElementById('progress-track'),
     livesTrack: document.getElementById('lives-track'),
@@ -320,6 +326,51 @@
     if (!nowMuted) window.GameSound.play('tap');
   });
   renderMuteButton();
+
+  var howtoRendered = false;
+  function renderHowtoList() {
+    if (howtoRendered) return; // 내용이 고정 데이터이므로 한 번만 그려두고 재사용합니다.
+    howtoRendered = true;
+
+    window.HOWTO_ENTRIES.forEach(function (entry, idx) {
+      var item = document.createElement('article');
+      item.className = 'howto-item';
+
+      var heading = document.createElement('h3');
+      heading.className = 'howto-item__title';
+      heading.textContent = idx + 1 + '. ' + entry.title;
+
+      var preview = document.createElement('div');
+      preview.className = 'howto-preview';
+      entry.renderPreview(preview);
+
+      var desc = document.createElement('p');
+      desc.className = 'howto-item__desc';
+      desc.textContent = entry.description;
+
+      item.appendChild(heading);
+      item.appendChild(preview);
+      item.appendChild(desc);
+      els.howtoList.appendChild(item);
+    });
+  }
+
+  els.btnHowto.addEventListener('click', function () {
+    window.GameSound.unlock();
+    window.GameSound.play('tap');
+    renderHowtoList();
+    showScreen('howto');
+  });
+
+  els.btnHowtoBack.addEventListener('click', function () {
+    window.GameSound.play('tap');
+    showScreen('title');
+  });
+
+  els.howtoEntryIcon.innerHTML = window.GameIcons.helpCircle();
+  els.howtoBackIcon.innerHTML = window.GameIcons.arrowUp();
+  els.howtoBackIcon.style.transform = 'rotate(-90deg)';
+  els.howtoBackIcon.style.display = 'inline-flex';
 
   els.btnStart.addEventListener('click', startGame);
   els.btnRetry.addEventListener('click', startGame);
